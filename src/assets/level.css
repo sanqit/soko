@@ -4,7 +4,9 @@
 .level-buttons {
   display: inline-grid;
 }
-
+.menu-buttons {
+  display: inline-flex;
+}
 .level {
   display: inline-grid;
 }

@@ -24,7 +24,7 @@ export default class Game extends React.Component<any, IGameState> {
         <Level
           key={Math.random()}
           level={selectedLevel}
-          finish={() => {
+          goToMenu={() => {
             this.setState({ selectedLevel: undefined });
           }}
         />

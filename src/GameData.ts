@@ -1,6 +1,7 @@
 export interface ILevel {
   name: string;
   data: string[][];
+  defaultState: ILevel;
   finished?: boolean;
 }
 
@@ -66,5 +67,9 @@ const gameData: IGame = {
     },
   ],
 };
+
+gameData.levels.map(x => {
+  x.defaultState = JSON.parse(JSON.stringify(x)) as ILevel;
+});
 
 export default gameData;

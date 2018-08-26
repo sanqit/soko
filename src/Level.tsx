@@ -5,14 +5,12 @@ import "./assets/level.css";
 
 interface ILevelProps {
   level: ILevel;
-  finish: () => void;
+  goToMenu: () => void;
 }
 
 interface ILevelSate {
   levelRender?: any;
   level: ILevel;
-  dx: number;
-  dy: number;
   x: number;
   y: number;
 }
@@ -22,13 +20,13 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
     super(props);
     this.state = {
       level: props.level,
-      dx: 0,
-      dy: 0,
       x: 0,
       y: 0,
     };
     this.keyDownHandler = this.keyDownHandler.bind(this);
     this.createLevel = this.createLevel.bind(this);
+    this.restartHandle = this.restartHandle.bind(this);
+    this.goToMenuHandle = this.goToMenuHandle.bind(this);
   }
 
   componentDidMount() {
@@ -74,10 +72,11 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
 
   keyDownHandler = (event: any) => {
     let { level, x, y, dx, dy } = this.state;
-    if (event.defaultPrevented) {
+    if (event.defaultPrevented || level.finished) {
       return; // Do nothing if the event was already processed
     }
-
+    let dx = 0,
+      dy = 0;
     const data = level.data;
     if (event.keyCode == 37) (dx = -1), (dy = 0);
     else if (event.keyCode == 39) (dx = 1), (dy = 0);
@@ -118,16 +117,38 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
 
     level.finished = true;
     window.removeEventListener("keydown", this.keyDownHandler);
-    this.setState({ level: level, x: x, y: y }, this.props.finish);
+    this.setState({ level: level, x: x, y: y }, this.props.goToMenu);
     event.preventDefault();
   };
 
+  restartHandle() {
+    var { level } = this.props;
+    level.finished = false;
+    level.data = JSON.parse(JSON.stringify(level.defaultState.data));
+    this.setState({ level }, () => {
+      window.addEventListener("keydown", this.keyDownHandler);
+      this.createLevel();
+    });
+  }
+  goToMenuHandle() {
+    this.props.goToMenu();
+  }
   render() {
     const { level, levelRender } = this.state;
     return (
       <div>
         <div>{level.name}</div>
-        <div className="level">{levelRender}</div>
+        <div className="level">
+          {levelRender}
+          <div className="menu-buttons">
+            <button className="btn" onClick={this.restartHandle}>
+              <span>Заново</span>
+            </button>
+            <button className="btn" onClick={this.goToMenuHandle}>
+              <span>Главное меню</span>
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
