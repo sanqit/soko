@@ -71,7 +71,7 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
   }
 
   keyDownHandler = (event: any) => {
-    let { level, x, y, dx, dy } = this.state;
+    let { level, x, y } = this.state;
     if (event.defaultPrevented || level.finished) {
       return; // Do nothing if the event was already processed
     }
@@ -124,7 +124,7 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
   restartHandle() {
     var { level } = this.props;
     level.finished = false;
-    level.data = JSON.parse(JSON.stringify(level.defaultState.data));
+    level.data = JSON.parse(JSON.stringify((level.defaultState || level).data));
     this.setState({ level }, () => {
       window.addEventListener("keydown", this.keyDownHandler);
       this.createLevel();

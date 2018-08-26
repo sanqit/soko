@@ -42,7 +42,7 @@ export default class Game extends React.Component<any, IGameState> {
               className={`btn ${x.finished ? "" : "btn-orange"}`}
               onClick={() => this.setState({ selectedLevel: x })}
             >
-              <span>{x.name}</span>
+              <span>Уровень {x.name}</span>
             </button>
           );
         })}
