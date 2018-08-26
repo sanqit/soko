@@ -5,7 +5,7 @@ import "./assets/btn.css";
 export default class App extends React.Component {
   render() {
     return (
-      <div>
+      <div style={{ textAlign: "center" }}>
         <Game />
         <div>
           from <a href="http://t.me/sanqit">sanqit</a> with love
