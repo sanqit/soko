@@ -71,19 +71,30 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
   }
 
   keyDownHandler = (event: any) => {
+    if (event.defaultPrevented) {
+      return;
+    }
+    if (this.step(event.keyCode)) {
+      window.removeEventListener("keydown", this.keyDownHandler);
+    }
+    event.preventDefault();
+  };
+  step = (keyCode: number) => {
     let { level, x, y } = this.state;
-    if (event.defaultPrevented || level.finished) {
-      return; // Do nothing if the event was already processed
+    if (level.finished) {
+      return false;
     }
     let dx = 0,
       dy = 0;
     const data = level.data;
-    if (event.keyCode == 37) (dx = -1), (dy = 0);
-    else if (event.keyCode == 39) (dx = 1), (dy = 0);
-    else if (event.keyCode == 38) (dx = 0), (dy = -1);
-    else if (event.keyCode == 40) (dx = 0), (dy = 1);
-    else return;
-    if (data[y + dy][x + dx] == "w") return;
+    if (keyCode == 37) (dx = -1), (dy = 0);
+    else if (keyCode == 39) (dx = 1), (dy = 0);
+    else if (keyCode == 38) (dx = 0), (dy = -1);
+    else if (keyCode == 40) (dx = 0), (dy = 1);
+    else return false;
+    if (data[y + dy][x + dx] == "w") {
+      return false;
+    }
 
     if (data[y + dy][x + dx] == "b" || data[y + dy][x + dx] == "a") {
       if (
@@ -92,7 +103,7 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
         data[y + dy + dy][x + dx + dx] == "a"
       ) {
         this.setState({ level: level, x: x, y: y });
-        return;
+        return false;
       }
       data[y + dy + dy][x + dx + dx] =
         data[y + dy + dy][x + dx + dx] == "p" ? "a" : "b";
@@ -100,7 +111,7 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
     }
     if (data[y + dy][x + dx] == "w") {
       this.setState({ level: level, x: x, y: y });
-      return;
+      return false;
     }
     data[y][x] = data[y][x] == "Y" ? "p" : "_";
 
@@ -112,13 +123,12 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
       for (var m = 0; m < data[n].length; m++)
         if (data[n][m] == "b") {
           this.setState({ level: level, x: x, y: y }, this.createLevel);
-          return;
+          return false;
         }
 
     level.finished = true;
-    window.removeEventListener("keydown", this.keyDownHandler);
     this.setState({ level: level, x: x, y: y }, this.props.goToMenu);
-    event.preventDefault();
+    return true;
   };
 
   restartHandle() {
@@ -134,18 +144,54 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
     this.props.goToMenu();
   }
   render() {
+    const controlButtonStyle = {
+      display: "initial",
+      width: 40,
+      height: 40,
+      margin: "0 0 5px 5px",
+    };
     const { level, levelRender } = this.state;
     return (
-      <div>
-        <div>{level.name}</div>
-        <div className="level">
-          {levelRender}
-          <div className="menu-buttons">
-            <button className="btn" onClick={this.restartHandle}>
-              <span>Заново</span>
+      <div className="level">
+        <div>Уровень {level.name}</div>
+        <div className="menu-buttons">
+          <button className="btn" onClick={this.restartHandle}>
+            <span>Заново</span>
+          </button>
+          <button className="btn" onClick={this.goToMenuHandle}>
+            <span>Главное меню</span>
+          </button>
+        </div>
+        {levelRender}
+        <div className="control-buttons">
+          <button
+            style={controlButtonStyle}
+            className="btn"
+            onClick={this.step.bind(this, 38)}
+          >
+            &uarr;
+          </button>
+          <div className="">
+            <button
+              style={controlButtonStyle}
+              className="btn"
+              onClick={this.step.bind(this, 37)}
+            >
+              &larr;
             </button>
-            <button className="btn" onClick={this.goToMenuHandle}>
-              <span>Главное меню</span>
+            <button
+              style={controlButtonStyle}
+              className="btn"
+              onClick={this.step.bind(this, 40)}
+            >
+              &darr;
+            </button>
+            <button
+              style={controlButtonStyle}
+              className="btn"
+              onClick={this.step.bind(this, 39)}
+            >
+              &rarr;
             </button>
           </div>
         </div>

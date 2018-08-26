@@ -7,6 +7,9 @@
 .menu-buttons {
   display: inline-flex;
 }
+.control-buttons {
+  padding-top: 10px;
+}
 .level {
   display: inline-grid;
 }
