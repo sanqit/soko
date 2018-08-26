@@ -4,6 +4,13 @@ import "./assets/btn.css";
 
 export default class App extends React.Component {
   render() {
-    return <Game />;
+    return (
+      <div>
+        <Game />
+        <div>
+          from <a href="http://t.me/sanqit">sanqit</a> with love
+        </div>
+      </div>
+    );
   }
 }
