@@ -31,18 +31,17 @@ export default class Game extends React.Component<any, IGameState> {
       );
     }
 
-    var levelNumber = 0;
     return (
       <div className="level-buttons">
-        {game.levels.map(x => {
-          levelNumber++;
+        {game.levels.map((x, index) => {
           return (
             <button
-              key={`level${levelNumber}`}
+              key={`level${index}`}
+              disabled={!x.unlocked && !game.levels[index - 1].finished}
               className={`btn ${x.finished ? "" : "btn-orange"}`}
               onClick={() => this.setState({ selectedLevel: x })}
             >
-              <span>Уровень {x.name}</span>
+              <span>Уровень {index + 1}</span>
             </button>
           );
         })}

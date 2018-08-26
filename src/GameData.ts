@@ -3,6 +3,7 @@ export interface ILevel {
   data: string[][];
   defaultState?: ILevel;
   finished?: boolean;
+  unlocked?: boolean;
 }
 
 export interface IGame {
@@ -20,7 +21,8 @@ function createData(arr: string[]) {
 const gameData: IGame = {
   levels: [
     {
-      name: "1",
+      name: "Поехали",
+      unlocked: true,
       data: createData([
         "wwwwwwww",
         "w___w__w",

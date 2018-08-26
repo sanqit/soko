@@ -66,7 +66,6 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
         </div>
       );
     });
-    console.log(`x=${yx};y=${yy}`);
     this.setState({ levelRender: levelRender, x: yx, y: yy });
   }
 
@@ -153,7 +152,8 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
     const { level, levelRender } = this.state;
     return (
       <div className="level">
-        <div>Уровень {level.name}</div>
+        <div>{level.name}</div>
+        {levelRender}
         <div className="menu-buttons">
           <button className="btn" onClick={this.restartHandle}>
             <span>Заново</span>
@@ -162,7 +162,6 @@ export default class Level extends React.Component<ILevelProps, ILevelSate> {
             <span>Главное меню</span>
           </button>
         </div>
-        {levelRender}
         <div className="control-buttons">
           <button
             style={controlButtonStyle}
